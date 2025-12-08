@@ -1,7 +1,7 @@
 ﻿using System;
 using SAPbobsCOM;
 
-namespace WindowsServiceTestB1DI
+namespace B1DITest_WindowsService_CSharp
 {
     /// <summary>
     /// 连接测试工具类（不包含 Main 方法）

@@ -2,7 +2,7 @@
 using System.Text;
 using SAPbobsCOM;
 
-namespace WindowsServiceTestB1DI
+namespace B1DITest_WindowsService_CSharp
 {
     public class SAPB1Connection
     {
@@ -48,38 +48,13 @@ namespace WindowsServiceTestB1DI
                 Log(logAction, $"CompanyDB: {config.Company}");
                 Log(logAction, $"UserName: {config.B1Username}");
                 //Log(logAction, $"DbUserName: {config.DatabaseUserName}");
+                Log(logAction, $"LicenseServer: {config.LicenseServer}");
                 Log(logAction, $"SLDServer: {config.SLDServer}");
-                //Log(logAction, $"TrustServerCertificate: {config.TrustServerCertificate}");
-                //Log(logAction, $"UseSsl: {config.UseSsl}");
                 Log(logAction, "========================");
-                /*
-                WriteLog(logCallback, "=== SAP B1 连接参数 ===");
-                WriteLog(logCallback, $"DbServerType: {config.GetDbServerType()} ({(int)config.GetDbServerType()})");
-                WriteLog(logCallback, $"Server: {config.ServerName}");
-                WriteLog(logCallback, $"CompanyDB: {config.Company}");
-                WriteLog(logCallback, $"UserName: {config.B1Username}");
-                WriteLog(logCallback, $"DbUserName: {config.DatabaseUserName}");
-                WriteLog(logCallback, $"SLDServer: {config.SLDServer}");
-                WriteLog(logCallback, $"TrustServerCertificate: {config.TrustServerCertificate}");
-                WriteLog(logCallback, $"UseSsl: {config.UseSsl}");
-                WriteLog(logCallback, "========================");
-                */
 
                 // 设置数据库服务器类型
                 oCompany.DbServerType = config.GetDbServerType();
 
-                /*
-                // 设置数据库连接信息
-                oCompany.Server = config.ServerName;
-                oCompany.DbUserName = config.DatabaseUserName ?? "";
-                oCompany.DbPassword = config.DatabasePassword ?? "";
-
-                // 设置 SLD 服务器（如果有）
-                if (!string.IsNullOrEmpty(config.SLDServer))
-                {
-                    oCompany.SLDServer = config.SLDServer;
-                }
-                */
 
                 // 设置公司数据库
                 oCompany.CompanyDB = config.Company;
@@ -92,88 +67,22 @@ namespace WindowsServiceTestB1DI
                 oCompany.language = BoSuppLangs.ln_English;
 
                 oCompany.Server = config.ServerName;
+                // 设置数据库连接信息
+                //oCompany.DbUserName = config.DatabaseUserName ?? "";
+                //oCompany.DbPassword = config.DatabasePassword ?? "";
+
+                oCompany.LicenseServer = config.LicenseServer;
                 oCompany.SLDServer = config.SLDServer;
 
-                // 设置使用 NT 身份验证（如果需要）
-                // oCompany.UseTrusted = false;
-                /*
-                // ========================================
-                // 关键：信任所有 SSL 证书
-                // ========================================
-                oCompany.UseTrusted = false;
-
-                // 选项1：信任所有证书（不验证）
-                oCompany.Server = oCompany.Server + ",TrustServerCertificate=True";
-
-                // 或者使用 SLD 连接时的证书信任设置
-                // oCompany.SLDServer = oCompany.SLDServer + ",TrustServerCertificate=True";
-                */
-
 
                 oCompany.UseTrusted = false;
 
-                /*
-                // 构建服务器连接字符串
-                string serverString = config.ServerName;
-
-                // 如果需要信任服务器证书
-                if (config.TrustServerCertificate)
-                {
-                    if (!serverString.Contains("TrustServerCertificate"))
-                    {
-                        serverString += ";TrustServerCertificate=True";
-                    }
-                }
-
-                // 设置加密连接（如果需要）
-                if (config.UseSsl)
-                {
-                    if (!serverString.Contains("Encrypt"))
-                    {
-                        serverString += ";Encrypt=Yes";
-                    }
-                }
-
-                oCompany.Server = serverString;
-                */
-                //logAction?.Invoke($"最终服务器字符串: {serverString}");
-
-                /*
-                // 设置数据库凭据
-                if (!string.IsNullOrEmpty(config.DatabaseUserName))
-                {
-                    oCompany.DbUserName = config.DatabaseUserName;
-                }
-
-                if (!string.IsNullOrEmpty(config.DatabasePassword))
-                {
-                    oCompany.DbPassword = config.DatabasePassword;
-                }
-                *
-
-                // 设置 SLD 服务器
-                if (!string.IsNullOrEmpty(config.SLDServer))
-                {
-                    string sldServer = config.SLDServer;
-
-                    // SLD 服务器也需要信任证书
-                    if (config.TrustServerCertificate && !sldServer.Contains("TrustServerCertificate"))
-                    {
-                        // 如果 SLD 服务器是 URL 格式，不添加参数
-                        if (!sldServer.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                        {
-                            sldServer += ";TrustServerCertificate=True";
-                        }
-                    }
-
-                    oCompany.SLDServer = sldServer;
-                    Log(logAction, $"SLD 服务器: {sldServer}");
-                }
-                */
 
                 // 尝试连接
                 Log(logAction, "开始连接...");
                 int lRetCode = oCompany.Connect();
+                // 尝试连接
+                Log(logAction, "连接...After Connect");
 
                 if (lRetCode != 0)
                 {
@@ -205,24 +114,6 @@ namespace WindowsServiceTestB1DI
     private void Log(Action<string> logAction, string message)
     {
     logAction?.Invoke(message);
-    }
-
-    /// <summary>
-    /// 辅助方法：安全写入日志
-    /// </summary>
-    private void WriteLog(Action<string> logCallback, string message)
-    {
-        if (logCallback != null)
-        {
-            try
-            {
-                logCallback(message);
-            }
-            catch
-            {
-                // 忽略日志回调错误
-            }
-        }
     }
 
     private string GetDetailedErrorMessage(int errCode, string errMsg)
@@ -331,6 +222,7 @@ namespace WindowsServiceTestB1DI
             sb.AppendLine($"SAP B1 版本: {oCompany.Version}");
             sb.AppendLine($"服务器: {oCompany.Server}");
             sb.AppendLine($"用户: {oCompany.UserName}");
+            sb.AppendLine($"License服务器: {oCompany.LicenseServer}");
             sb.Append($"SLD服务器: {oCompany.SLDServer}"); // 最后一行不要换行
 
             return sb.ToString();

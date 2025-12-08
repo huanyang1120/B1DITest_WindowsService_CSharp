@@ -4,7 +4,7 @@ using System.ServiceProcess;
 using System.Timers;
 using System.Diagnostics;
 
-namespace WindowsServiceTestB1DI
+namespace B1DITest_WindowsService_CSharp
 {
     public partial class Service1 : ServiceBase
     {
@@ -14,14 +14,14 @@ namespace WindowsServiceTestB1DI
         private bool isStarted = false;
         private bool isStarting = false; // 新增：防止重复启动标志
 
-        //private string logPath = @"C:\Logs\TestB1DIService\MyService.log";
+        //private string logPath = @"C:\Logs\B1DITest_WindowsService_CSharp\B1DITest.log";
         // 日志目录
-        private readonly string logDirectory = @"C:\Logs\TestB1DIService";
+        private readonly string logDirectory = @"C:\Logs\B1DITest_WindowsService_CSharp";
 
         // 动态获取当前小时的日志文件路径
         private string GetCurrentLogPath()
         {
-            string fileName = $"MyService_{DateTime.Now:yyyyMMddHH}.log";
+            string fileName = $"B1DITest_{DateTime.Now:yyyyMMddHH}.log";
             return Path.Combine(logDirectory, fileName);
         }
         public Service1()
@@ -29,7 +29,7 @@ namespace WindowsServiceTestB1DI
             InitializeComponent();
             
             // 设置服务名称
-            this.ServiceName = "TestB1DIService";
+            this.ServiceName = "B1DITest_WindowsService_CSharp";
 
             this.AutoLog = true;
             this.CanStop = true;
@@ -261,6 +261,7 @@ namespace WindowsServiceTestB1DI
                 WriteLog($"  Company: {config.Company}");
                 WriteLog($"  B1Username: {config.B1Username}");
                 WriteLog($"  SLDServer: {config.SLDServer}");
+                WriteLog($"  LicenseServer: {config.LicenseServer}");
 
                 return true;
             }
@@ -307,6 +308,7 @@ namespace WindowsServiceTestB1DI
                 WriteLog($"  B1用户: {config.B1Username}");
                 //WriteLog($"  数据库用户: {config.DatabaseUserName}");
                 WriteLog($"  SLD服务器: {config.SLDServer}");
+                WriteLog($"  License服务器: {config.LicenseServer}");
 
                 if (sapConnection == null)
                 {
@@ -339,75 +341,6 @@ namespace WindowsServiceTestB1DI
                 }
 
                 return false;
-            }
-        }
-        private void LoadConfiguration()
-        {
-            try
-            {
-                WriteLog("正在读取配置文件...");
-                WriteLog($"配置文件路径: C:\\Temp\\COM DI\\CSharp\\WindowsServiceTestB1DI\\config.json");
-
-                config = ConfigManager.LoadConfig();
-
-                WriteLog("配置文件读取成功:");
-                WriteLog(config.ToString());
-            }
-            catch (FileNotFoundException ex)
-            {
-                WriteLog($"配置文件不存在: {ex.Message}");
-                WriteLog("正在创建默认配置文件...");
-
-                try
-                {
-                    ConfigManager.CreateDefaultConfig();
-                    WriteLog("默认配置文件已创建，请修改配置后重启服务");
-                }
-                catch (Exception createEx)
-                {
-                    WriteLog($"创建配置文件失败: {createEx.Message}");
-                }
-
-                throw new Exception("请修改配置文件后重启服务", ex);
-            }
-            catch (Exception ex)
-            {
-                WriteLog($"读取配置文件失败: {ex.Message}");
-                throw;
-            }
-        }
-        private void ConnectToSAPB1()
-        {
-            try
-            {
-                WriteLog("正在连接到 SAP Business One...");
-                WriteLog($"服务器: {config.ServerName}");
-                WriteLog($"SLD服务器: {config.SLDServer}");
-                WriteLog($"数据库类型: {config.DatabaseType}");
-                WriteLog($"公司数据库: {config.Company}");
-                WriteLog($"用户: {config.B1Username}");
-
-                sapConnection = new SAPB1Connection();
-                bool connected = sapConnection.Connect(config);
-
-                if (connected)
-                {
-                    WriteLog("成功连接到 SAP Business One！");
-                    WriteLog(sapConnection.GetCompanyInfo());
-                }
-                else
-                {
-                    throw new Exception("连接失败，未知错误");
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteLog($"连接 SAP B1 失败: {ex.Message}");
-                if (sapConnection != null)
-                {
-                    WriteLog($"详细错误: {sapConnection.GetLastError()}");
-                }
-                throw;
             }
         }
         private void DisconnectFromSAPB1()

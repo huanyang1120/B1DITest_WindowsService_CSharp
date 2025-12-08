@@ -2,11 +2,11 @@
 using System.IO;
 using System.Text.Json;
 
-namespace WindowsServiceTestB1DI
+namespace B1DITest_WindowsService_CSharp
 {
     public class ConfigManager
     {
-        //private static readonly string ConfigFilePath = @"C:\Temp\COM DI\CSharp\WindowsServiceTestB1DI\config.json";
+        //private static readonly string ConfigFilePath = @"C:\Temp\COM DI\CSharp\B1DITest_WindowsService_CSharp\config.json";
         // 使用相对路径，配置文件与 exe 在同一目录
         private static string ConfigFilePath
         {
@@ -107,6 +107,7 @@ namespace WindowsServiceTestB1DI
                 DatabaseType = "dst_MSSQL2022",
                 //DatabaseUserName = "sa",
                 //DatabasePassword = "1234",
+                LicenseServer = "iZ7y4gbss1x67fZ:30000",
                 SLDServer = "iZ7y4gbss1x67fZ:40000",
                 Company = "TestCN",
                 B1Username = "manager",

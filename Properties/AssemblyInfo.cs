@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WindowsServiceTestB1DI")]
+[assembly: AssemblyTitle("B1DITest_WindowsService_CSharp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("aliyun")]
-[assembly: AssemblyProduct("WindowsServiceTestB1DI")]
-[assembly: AssemblyCopyright("Copyright © aliyun 2025")]
+[assembly: AssemblyCompany("Huan")]
+[assembly: AssemblyProduct("B1DITest_WindowsService_CSharp")]
+[assembly: AssemblyCopyright("Copyright © Huan 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

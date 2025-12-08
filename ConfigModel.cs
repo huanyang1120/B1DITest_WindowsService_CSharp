@@ -1,7 +1,6 @@
-﻿using System;
-using SAPbobsCOM;
+﻿using SAPbobsCOM;
 
-namespace WindowsServiceTestB1DI
+namespace B1DITest_WindowsService_CSharp
 {
     public class ConfigModel
     {
@@ -9,6 +8,7 @@ namespace WindowsServiceTestB1DI
         public string DatabaseType { get; set; }
         //public string DatabaseUserName { get; set; }
         //public string DatabasePassword { get; set; }
+        public string LicenseServer { get; set; }
         public string SLDServer { get; set; }
         public string Company { get; set; }
         public string B1Username { get; set; }
@@ -97,6 +97,7 @@ namespace WindowsServiceTestB1DI
                    $"DatabaseType: {DatabaseType}\n" +
                    //$"DatabaseUserName: {DatabaseUserName}\n" +
                    //$"DatabasePassword: ****\n" +
+                   $"LicenseServer: {LicenseServer}\n" +
                    $"SLDServer: {SLDServer}\n" +
                    $"Company: {Company}\n" +
                    $"B1Username: {B1Username}\n" +

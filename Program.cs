@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WindowsServiceTestB1DI
+namespace B1DITest_WindowsService_CSharp
 {
     internal static class Program
     {
@@ -43,7 +39,7 @@ namespace WindowsServiceTestB1DI
                 Console.WriteLine();
                 Console.WriteLine("提示:");
                 Console.WriteLine("  使用 /test 参数运行连接测试");
-                Console.WriteLine("  示例: WindowsServiceTestB1DI.exe /test");
+                Console.WriteLine("  示例: B1DITest_WindowsService_CSharp.exe /test");
                 Console.WriteLine();
 
                 Service1 service = new Service1();

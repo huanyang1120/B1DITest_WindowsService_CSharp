@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FF1AE655-14B4-4532-B8D7-7FBE80872A49}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WindowsServiceTestB1DI</RootNamespace>
-    <AssemblyName>WindowsServiceTestB1DI</AssemblyName>
+    <RootNamespace>B1DITest_WindowsService_CSharp</RootNamespace>
+    <AssemblyName>B1DITest_WindowsService_CSharp</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

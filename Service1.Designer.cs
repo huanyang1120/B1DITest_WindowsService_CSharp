@@ -1,4 +1,4 @@
-﻿namespace WindowsServiceTestB1DI
+﻿namespace B1DITest_WindowsService_CSharp
 {
     partial class Service1
     {

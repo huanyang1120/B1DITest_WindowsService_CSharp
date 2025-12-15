@@ -1,14 +1,21 @@
 {
-    //"ServerName": "CNSBOINFRA011.sme.c.ap-cn-1.cloud.xxx",
+    //"ServerName": "CNSBOINFRA011.sme.c.ap-cn-1.cloud.xxxx",
     "ServerName": "IZ7Y4GBSS1X67FZ",
     "DatabaseType": "DST_MSSQL2022",
+    "DatabaseUserName": "sa",
+    "DatabasePassword": "xxxx4",
     //"DatabaseUserName": "sa",
-    //"DatabasePassword": "xxx",
+    //"DatabasePassword": "xxxxB1Admin",
+    //"LicenseServer": "CNSBOINFRA011.sme.c.ap-cn-1.cloud.xxxx:30000",
+    //"SLDServer": "",
+    //"LicenseServer": "",
+    //"SLDServer": "CNSBOINFRA011.sme.c.ap-cn-1.cloud.xxxx:40000",
+    //"LicenseServer": "IZ7Y4GBSS1X67FZ:30000",
+    //"SLDServer": "",
     "LicenseServer": "",
-    //"SLDServer": "CNSBOINFRA011.sme.c.ap-cn-1.cloud.xxx:40000",
     "SLDServer": "IZ7Y4GBSS1X67FZ:40000",
     "Company": "TestCN",
     "B1Username": "manager",
-    //"B1Password": "xxx@"
-    "B1Password": "xxx"
+    //"B1Password": "xxxxtial0@"
+    "B1Password": "xxxx4"
 }

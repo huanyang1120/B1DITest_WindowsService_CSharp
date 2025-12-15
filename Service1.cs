@@ -109,7 +109,7 @@ namespace B1DITest_WindowsService_CSharp
                 WriteLog("开始初始化服务组件...");
 
                 // 1. 读取配置文件
-                WriteLog("步骤 1/3: 读取配置文件");
+                WriteLog("步骤 1/4: 读取配置文件");
                 if (!TryLoadConfiguration())
                 {
                     WriteLog("配置文件加载失败，服务将以有限功能运行");
@@ -117,15 +117,22 @@ namespace B1DITest_WindowsService_CSharp
                     return;
                 }
 
-                // 2. 连接 SAP B1
-                WriteLog("步骤 2/3: 连接 SAP Business One");
+                // 2. 获取 SAP B1 Company List
+                WriteLog("步骤 2/4: 获取 SAP Business One Company List ");
+                if (!TryGetSAPB1CompanyList())
+                {
+                    WriteLog("SAP B1 Company List获取失败");
+                }
+
+                // 3. 连接 SAP B1
+                WriteLog("步骤 3/4: 连接 SAP Business One");
                 if (!TryConnectToSAPB1())
                 {
                     WriteLog("SAP B1 连接失败，将在定时器中重试");
                 }
 
                 // 3. 启动定时器
-                WriteLog("步骤 3/3: 启动定时器");
+                WriteLog("步骤 4/4: 启动定时器");
                 StartTimer();
 
                 isStarted = true;
@@ -258,10 +265,11 @@ namespace B1DITest_WindowsService_CSharp
                 WriteLog("配置文件读取成功:");
                 WriteLog($"  ServerName: {config.ServerName}");
                 WriteLog($"  DatabaseType: {config.DatabaseType}");
+                WriteLog($"  DatabaseUserName: {config.DatabaseUserName}");
                 WriteLog($"  Company: {config.Company}");
                 WriteLog($"  B1Username: {config.B1Username}");
-                WriteLog($"  SLDServer: {config.SLDServer}");
                 WriteLog($"  LicenseServer: {config.LicenseServer}");
+                WriteLog($"  SLDServer: {config.SLDServer}");
 
                 return true;
             }
@@ -291,6 +299,57 @@ namespace B1DITest_WindowsService_CSharp
             }
         }
 
+        private bool TryGetSAPB1CompanyList()
+        {
+            try
+            {
+                if (config == null)
+                {
+                    WriteLog("错误: 配置对象为空，无法获取  SAP B1 Company List");
+                    return false;
+                }
+
+                if (config.DatabaseUserName.Length > 0)
+                {
+
+                    WriteLog("正在获取 SAP Business One Company List...");
+                    WriteLog($"  服务器: {config.ServerName}");
+                    WriteLog($"  数据库类型: {config.DatabaseType}");
+                    WriteLog($"  数据库用户: {config.DatabaseUserName}");
+
+                    if (sapConnection == null)
+                    {
+                        sapConnection = new SAPB1Connection();
+                    }
+
+                    // 传递日志函数
+                    bool connected = sapConnection.GetSAPB1CompanyList(config, WriteLog);
+
+                    if (connected)
+                    {
+                        WriteLog("成功 Get到 SAP Business One Company List！");
+                        return true;
+                    }
+                    else
+                    {
+                        WriteLog("获取失败: 未知错误");
+                        return false;
+                    }
+                }
+                else 
+                {
+                    WriteLog("Skip Get SAP B1 Company List");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteLog($"获取 Company List 失败 in private bool TryGetSAPB1CompanyList: {ex.Message}");
+                WriteLog($"堆栈跟踪: {ex.StackTrace}");
+
+                return false;
+            }
+        }
         private bool TryConnectToSAPB1()
         {
             try
@@ -304,11 +363,11 @@ namespace B1DITest_WindowsService_CSharp
                 WriteLog("正在连接到 SAP Business One...");
                 WriteLog($"  服务器: {config.ServerName}");
                 WriteLog($"  数据库类型: {config.DatabaseType}");
+                WriteLog($"  数据库用户: {config.DatabaseUserName}");
                 WriteLog($"  公司数据库: {config.Company}");
                 WriteLog($"  B1用户: {config.B1Username}");
-                //WriteLog($"  数据库用户: {config.DatabaseUserName}");
-                WriteLog($"  SLD服务器: {config.SLDServer}");
                 WriteLog($"  License服务器: {config.LicenseServer}");
+                WriteLog($"  SLD服务器: {config.SLDServer}");
 
                 if (sapConnection == null)
                 {
@@ -316,7 +375,7 @@ namespace B1DITest_WindowsService_CSharp
                 }
 
                 // 传递日志函数
-                bool connected = sapConnection.Connect(config);
+                bool connected = sapConnection.Connect(config, WriteLog);
 
                 if (connected)
                 {
@@ -521,7 +580,7 @@ namespace B1DITest_WindowsService_CSharp
         /// <summary>
         /// 写入日志（按小时分文件）
         /// </summary>
-        private void WriteLog(string message)
+        public void WriteLog(string message)
         {
             /*
             try

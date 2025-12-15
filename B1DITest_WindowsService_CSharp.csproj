@@ -89,6 +89,7 @@
     <None Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="README.md" />
     <None Include="ValidateConfig.ps1" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Emit;
 using System.Text;
 using SAPbobsCOM;
 
@@ -12,6 +13,77 @@ namespace B1DITest_WindowsService_CSharp
 
         public Company Company => oCompany;
         public bool IsConnected => isConnected && oCompany != null && oCompany.Connected;
+
+        public bool GetSAPB1CompanyList(ConfigModel configuration, Action<string> logAction = null)
+        {
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration), "配置对象不能为空");
+            }
+
+            try
+            {
+                config = configuration;
+
+                /*
+                // 释放旧的连接
+                if (oCompany != null && oCompany.Connected)
+                {
+                    //Disconnect();
+                    Log(logAction, "Already connected to a B1 Company - " + oCompany.CompanyDB);
+                    return true;
+                }
+                */
+
+                // 创建 Company 对象
+                oCompany = new Company();
+
+                // 设置数据库服务器类型
+                oCompany.DbServerType = config.GetDbServerType();
+                oCompany.Server = config.ServerName;
+                oCompany.UseTrusted = false;
+                oCompany.DbUserName = config.DatabaseUserName;
+                oCompany.DbPassword = config.DatabasePassword;
+
+                // once the Server property of the Company is set
+                // 获取公司列表
+                var companyList = oCompany.GetCompanyList();
+                Log(logAction, $"Get the company list Successfully. The RecordCount is: {companyList.RecordCount}");
+
+                Log(logAction, $"The company object is: {oCompany.ToString()} {((object)oCompany).GetHashCode()}");
+                if (oCompany.GetCompanyList().RecordCount>0)
+                {
+                    //Log(logAction, "Get the company list Successfully");
+                    return true;
+                }
+                else
+                {
+                    Log(logAction, "B1 Company list is empty");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Use GetLastError method directly after a function
+                // which doesn't have a return code
+                // you may also use the On Error GoTo.
+                // functions with no return codes throws exceptions
+                try
+                {
+                    int errCode;
+                    string errMsg;
+                    oCompany.GetLastError(out errCode, out errMsg);
+
+                    //throw new Exception($"连接失败 [错误代码: {errCode}]: {errMsg}");
+                    throw new Exception($"Get Company List 失败 in public bool GetSAPB1CompanyList: \r\n oCompany.GetLastError is {errCode} {errMsg}\r\nex.Message is {ex.Message} \r\nex.StackTrace is {ex.StackTrace}", ex);
+                }
+                catch (Exception exc)
+                {
+                    throw new Exception($"Get Company List 失败 in public bool GetSAPB1CompanyList Catch: \r\nex.Message is {exc.Message} \r\nex.StackTrace is {exc.StackTrace}", exc);
+                }
+            }
+        }
 
         /// <summary>
         /// 连接到 SAP Business One
@@ -43,11 +115,11 @@ namespace B1DITest_WindowsService_CSharp
 
                 // 记录连接参数（用于诊断）
                 Log(logAction, "=== SAP B1 连接参数 ===");
-                Log(logAction, $"DbServerType: {config.GetDbServerType()} ({(int)config.GetDbServerType()})");
                 Log(logAction, $"Server: {config.ServerName}");
+                Log(logAction, $"DbServerType: {config.GetDbServerType()} ({(int)config.GetDbServerType()})");
+                Log(logAction, $"DbUserName: {config.DatabaseUserName}");
                 Log(logAction, $"CompanyDB: {config.Company}");
                 Log(logAction, $"UserName: {config.B1Username}");
-                //Log(logAction, $"DbUserName: {config.DatabaseUserName}");
                 Log(logAction, $"LicenseServer: {config.LicenseServer}");
                 Log(logAction, $"SLDServer: {config.SLDServer}");
                 Log(logAction, "========================");
@@ -78,6 +150,7 @@ namespace B1DITest_WindowsService_CSharp
                 oCompany.UseTrusted = false;
 
 
+                Log(logAction, $"The company object is: {oCompany.ToString()} {((object)oCompany).GetHashCode()}");
                 // 尝试连接
                 Log(logAction, "开始连接...");
                 int lRetCode = oCompany.Connect();
@@ -113,7 +186,7 @@ namespace B1DITest_WindowsService_CSharp
     /// </summary>
     private void Log(Action<string> logAction, string message)
     {
-    logAction?.Invoke(message);
+        logAction?.Invoke(message);
     }
 
     private string GetDetailedErrorMessage(int errCode, string errMsg)

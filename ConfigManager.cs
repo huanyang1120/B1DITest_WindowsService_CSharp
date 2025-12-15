@@ -105,15 +105,13 @@ namespace B1DITest_WindowsService_CSharp
             {
                 ServerName = "iZ7y4gbss1x67fZ",
                 DatabaseType = "dst_MSSQL2022",
-                //DatabaseUserName = "sa",
-                //DatabasePassword = "1234",
+                DatabaseUserName = "sa",
+                DatabasePassword = "1234",
                 LicenseServer = "iZ7y4gbss1x67fZ:30000",
                 SLDServer = "iZ7y4gbss1x67fZ:40000",
                 Company = "TestCN",
                 B1Username = "manager",
-                B1Password = "1234",
-                //TrustServerCertificate = true,  // 默认信任证书
-                //UseSsl = true
+                B1Password = "1234"
             };
 
             SaveConfig(defaultConfig);

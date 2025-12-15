@@ -6,21 +6,14 @@ namespace B1DITest_WindowsService_CSharp
     {
         public string ServerName { get; set; }
         public string DatabaseType { get; set; }
-        //public string DatabaseUserName { get; set; }
-        //public string DatabasePassword { get; set; }
+        public string DatabaseUserName { get; set; }
+        public string DatabasePassword { get; set; }
         public string LicenseServer { get; set; }
         public string SLDServer { get; set; }
         public string Company { get; set; }
         public string B1Username { get; set; }
         public string B1Password { get; set; }
 
-        /*
-        // 新增：是否信任服务器证书
-        public bool TrustServerCertificate { get; set; } = true;
-
-        // 新增：是否使用 SSL
-        public bool UseSsl { get; set; } = true;
-        */
 
         /// <summary>
         /// 获取数据库类型枚举值
@@ -95,15 +88,13 @@ namespace B1DITest_WindowsService_CSharp
         {
             return $"ServerName: {ServerName}\n" +
                    $"DatabaseType: {DatabaseType}\n" +
-                   //$"DatabaseUserName: {DatabaseUserName}\n" +
-                   //$"DatabasePassword: ****\n" +
+                   $"DatabaseUserName: {DatabaseUserName}\n" +
+                   $"DatabasePassword: ****\n" +
                    $"LicenseServer: {LicenseServer}\n" +
                    $"SLDServer: {SLDServer}\n" +
                    $"Company: {Company}\n" +
                    $"B1Username: {B1Username}\n" +
                    $"B1Password: ****" ;
-                   //$"TrustServerCertificate: {TrustServerCertificate}\n" +
-                   //$"UseSsl: {UseSsl}";
         }
     }
 }
